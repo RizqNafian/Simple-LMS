@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ClassRoomController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +18,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+route::resource('classroom', ClassRoomController::class)->except(['destroy']);
+route::get('delclassroom/{id}', [ClassRoomController::class, 'destroy'])->name('classroom.del');
