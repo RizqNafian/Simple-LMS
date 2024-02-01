@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Teacher;
 use Illuminate\Http\Request;
+use App\Models\Students;
 use App\Models\Course;
 use App\Models\ClassRoom;
 
-class TeacherController extends Controller
+class StudentsController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $teachers = Teacher::select('teachers.id', 'teachers.teacher_name', 'class_rooms.class_room_name', 'courses.course_name')
+        $students = Students::select('teachers.id', 'teachers.teacher_name', 'class_rooms.class_room_name', 'courses.course_name')
             ->join('courses', 'teachers.id', '=', 'courses.teacher_id')
             ->join('class_rooms', 'teachers.id', '=', 'class_rooms.teacher_id')
             ->get();
-        return view('teacher.index', compact('teachers'));
+        return view('students.index', compact('students'));
     }
 
     /**
@@ -26,9 +26,9 @@ class TeacherController extends Controller
      */
     public function create()
     {
+        $classes = ClassRoom::all();
         $courses = Course::all();
-        $classrooms = ClassRoom::all();
-        return view('teacher.create');
+        return view('students.create', compact('classes', 'courses'));
     }
 
     /**
@@ -36,12 +36,12 @@ class TeacherController extends Controller
      */
     public function store(Request $request)
     {
-        $teacher = new Teacher();
-        $teacher->teacher_name = $request->name;
-        $teacher->class_room_id = $request->class_room;
-        $teacher->course_id = $request->course;
-        $teacher->save();
-        return redirect()->route('teacher.index');
+        $student = new Students();
+        $student->student_name = $request->name;
+        $student->class_room_id = $request->class_room;
+        $student->course_id = $request->course;
+        $student->save();
+        return redirect()->route('students.index');
     }
 
     /**
@@ -49,12 +49,12 @@ class TeacherController extends Controller
      */
     public function show(string $id)
     {
-        $teacher = Teacher::find($id)
+        $student = Students::find($id)
             ->select('teachers.id', 'teachers.teacher_name', 'class_rooms.class_room_name', 'courses.course_name')
             ->join('courses', 'teachers.id', '=', 'courses.teacher_id')
             ->join('class_rooms', 'teachers.id', '=', 'class_rooms.teacher_id')
             ->get();
-        return view('teacher.show', compact('teacher'));
+        return view('students.show', compact('student'));
     }
 
     /**
@@ -62,10 +62,10 @@ class TeacherController extends Controller
      */
     public function edit(string $id)
     {
+        $classes = ClassRoom::all();
         $courses = Course::all();
-        $classrooms = ClassRoom::all();
-        $teacher = Teacher::find($id);
-        return view('teacher.edit', compact('teacher'));
+        $student = Students::find($id);
+        return view('students.edit', compact('student'));
     }
 
     /**
@@ -73,12 +73,12 @@ class TeacherController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $teacher = Teacher::find($id);
-        $teacher->teacher_name = $request->name;
-        $teacher->class_room_id = $request->class_room;
-        $teacher->course_id = $request->course;
-        $teacher->save();
-        return redirect()->route('teacher.index');
+        $student = Students::find($id);
+        $student->student_name = $request->name;
+        $student->class_room_id = $request->class_room;
+        $student->course_id = $request->course;
+        $student->save();
+        return redirect()->route('students.index');
     }
 
     /**
@@ -86,8 +86,8 @@ class TeacherController extends Controller
      */
     public function destroy(string $id)
     {
-        $teacher = Teacher::find($id);
-        $teacher->delete();
-        return redirect()->route('teacher.index');
+        $student = Students::find($id);
+        $student->delete();
+        return redirect()->route('students.index');
     }
 }
